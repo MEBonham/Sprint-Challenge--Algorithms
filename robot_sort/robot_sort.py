@@ -115,10 +115,23 @@ class SortingRobot:
             while self.can_move_right():
                 self.compare_two()
 
+            # Reverse the process to save time
+            if not self.light_is_on():
+                self.set_light_on()
+                while self.can_move_left():
+                    self.compare_reverse()
+                
+                if self.light_is_on():
+                    self.rush_to_end()
+
     def start_over(self):
         while self.can_move_left():
             self.move_left()
         self.set_light_on()
+
+    def rush_to_end(self):
+        while self.can_move_right():
+            self.move_right()
 
     def compare_two(self):
         """
@@ -138,6 +151,20 @@ class SortingRobot:
             self.move_left()
             self.swap_item()
             self.move_right()
+
+    def compare_reverse(self):
+        self.swap_item()
+        self.move_left()
+        if self.compare_item() > -1:
+            self.move_right()
+            self.swap_item()
+            self.move_left()
+        else:
+            self.set_light_off()
+            self.swap_item()
+            self.move_right()
+            self.swap_item()
+            self.move_left()
 
     
 
