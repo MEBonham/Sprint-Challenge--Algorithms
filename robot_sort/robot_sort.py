@@ -100,8 +100,46 @@ class SortingRobot:
         """
         Sort the robot's list.
         """
-        # Fill this out
-        pass
+        # Bubble sort actually seems like the way to go here, because of its extremely light space requirements. Any of the other
+        # sorting algorithms we talked about in depth seem like they would require the robot to "remember" positions of verious
+        # items.
+
+        # With bubble sort, the robot's light can be used to remember if it's done any swaps in the current pass. So I can start
+        # with a simple check for whether the sort is complete:
+        while self.can_move_right() or not self.light_is_on():
+            # If both of these conditions are false (the robot is at the end and its light is still on), the sort is complete 
+            # and this loop should end. I'll have to be careful to make sure the light turns off _before_ moving if the robot
+            # still needs to drop an item in the last spot.
+
+            self.start_over()
+            while self.can_move_right():
+                self.compare_two()
+
+    def start_over(self):
+        while self.can_move_left():
+            self.move_left()
+        self.set_light_on()
+
+    def compare_two(self):
+        """
+        Assume that the robot has no item in hand and is not next to an empty space. Compare the held item with the next one
+        to the right. If they're out of order, switch them and turn off the light. If they're in order, replace the originally
+        held item and pick up the next one.
+        """
+        self.swap_item()
+        self.move_right()
+        if self.compare_item() < 1:
+            self.move_left()
+            self.swap_item()
+            self.move_right()
+        else:
+            self.set_light_off()
+            self.swap_item()
+            self.move_left()
+            self.swap_item()
+            self.move_right()
+
+    
 
 
 if __name__ == "__main__":
